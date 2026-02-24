@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import readline from "node:readline";
 import { stdin as input, stdout as output } from "node:process";
-import { generateWordCard, generateGrammarCard } from "../gemini_cli/gemini.js";
+import { generateWordCard, generateGrammarCard } from "../gemini-cli/gemini.js";
 
 const rl = readline.createInterface({ input, output });
 
