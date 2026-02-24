@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 import readline from "node:readline";
 import { stdin as input, stdout as output } from "node:process";
-import { generateWordCard, generateGrammarCard } from "../gemini-cli/gemini.js";
+import {
+	generateWordCard,
+	generateGrammarCard,
+	generateSentenceCard,
+} from "../gemini-cli/gemini.js";
 
 const rl = readline.createInterface({ input, output });
 
@@ -23,6 +27,14 @@ const menuOptions = async (input) => {
 			});
 			break;
 		}
+		case 3: {
+			rl.question("Please insert the sentence: \n", async (answer) => {
+				const response = await generateSentenceCard(answer);
+				console.log(response);
+				menu();
+			});
+			break;
+		}
 		default:
 			menu();
 	}
@@ -30,7 +42,7 @@ const menuOptions = async (input) => {
 
 const menu = () => {
 	rl.setPrompt(
-		"What action do you want to perform?\n\t1)Generate a word card\n\t2)Generate a grammar card\n",
+		"What action do you want to perform?\n\t1)Generate a word card\n\t2)Generate a grammar card\n\t3)Generate a sentence card\n",
 	);
 	rl.prompt();
 	rl.once("line", (input) => {

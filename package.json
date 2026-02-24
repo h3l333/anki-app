@@ -1,15 +1,15 @@
 {
-	"name": "sandbox",
+	"name": "anki-tool",
 	"version": "1.0.0",
 	"description": "",
 	"main": "sandbox.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
+	"keywords": [],
 	"bin": {
 		"japan": "./gemini-cli/app.js"
 	},
-	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"type": "module",
