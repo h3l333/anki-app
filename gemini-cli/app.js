@@ -1,53 +1,71 @@
 #!/usr/bin/env node
-import readline from "node:readline";
+import * as readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 import {
 	generateWordCard,
 	generateGrammarCard,
 	generateSentenceCard,
 } from "../gemini-cli/gemini.js";
+import { addCardToAnki } from "../gemini-cli/axios.js";
 
 const rl = readline.createInterface({ input, output });
 
-const menuOptions = async (input) => {
-	switch (input) {
-		case 1: {
-			rl.question("Please insert the word: \n", async (answer) => {
-				const response = await generateWordCard(answer);
-				console.log(response);
-				menu();
-			});
-			break;
-		}
-		case 2: {
-			rl.question("Please insert the grammar point: \n", async (answer) => {
-				const response = await generateGrammarCard(answer);
-				console.log(response);
-				menu();
-			});
-			break;
-		}
-		case 3: {
-			rl.question("Please insert the sentence: \n", async (answer) => {
-				const response = await generateSentenceCard(answer);
-				console.log(response);
-				menu();
-			});
-			break;
-		}
-		default:
-			menu();
-	}
+const ankiDeck = "日本語::日本語カード";
+
+const menu = async () => {
+	let option = await rl.question("What do you want to do?\n");
+	await menuOptions(option);
 };
 
-const menu = () => {
-	rl.setPrompt(
-		"What action do you want to perform?\n\t1)Generate a word card\n\t2)Generate a grammar card\n\t3)Generate a sentence card\n",
-	);
-	rl.prompt();
-	rl.once("line", (input) => {
-		menuOptions(parseInt(input, 10));
-	});
+const menuOptions = async (option) => {
+	switch (option) {
+		case "1": {
+			let word = await rl.question("Please type the word: \n");
+			let answer = await generateWordCard(word);
+			console.log(answer);
+			let regenerate = await rl.question(
+				"Do you want to regenerate the card?\n",
+			);
+			while (regenerate == 1) {
+				let answer = await generateWordCard(word);
+				console.log(answer);
+				regenerate = await rl.question("Do you want to regenerate the card?\n");
+			}
+			await addCardToAnki(word, answer, ankiDeck, "語彙");
+			menu();
+			break;
+		}
+		case "2": {
+			let grammar = await rl.question("Please type in the grammar point: \n");
+			let answerGrammar = await generateGrammarCard(grammar);
+			console.log(answerGrammar);
+			let regenerate = await rl.question(
+				"Do you want to regenerate the card?\n",
+			);
+			while (regenerate == 1) {
+				let answerGrammar = await generateGrammarCard(grammar);
+				console.log(answerGrammar);
+				regenerate = await rl.question("Do you want to regenerate the card?\n");
+			}
+			menu();
+			break;
+		}
+		case "3": {
+			let sentence = await rl.question("Please type in the sentence: \n");
+			let answerSentence = await generateSentenceCard(sentence);
+			console.log(answerSentence);
+			let regenerate = await rl.question(
+				"Do you want to regenerate the card?\n",
+			);
+			while (regenerate == 1) {
+				let answerSentence = await generateSentenceCard(sentence);
+				console.log(answerSentence);
+				regenerate = await rl.question("Do you want to regenerate the card?\n");
+			}
+			menu();
+			break;
+		}
+	}
 };
 
 menu();
