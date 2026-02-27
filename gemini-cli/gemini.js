@@ -26,7 +26,6 @@ export const generateWordCard = async (word) => {
         \n使用場面: [context(s) where the word is used]
         \n漢字の意味: [very brief description, ONLY IF APPLICABLE. If none apply, just put "漢字なし"]
         \n日本語の能力試験のレベル: [what JLPT level the word is typically associated with]
-        \n説明用の画像: [URL to a Google Images query for the given word]
         `,
 	});
 	return response.candidates[0].content.parts[0].text;

@@ -22,5 +22,3 @@ export const addCardToAnki = async (front, back, deck, tag) => {
 		console.log(`Failed to connect\n${e}`);
 	}
 };
-
-//addCardToAnki("test", "test", "test", "test");

@@ -7,6 +7,7 @@ import {
 	generateSentenceCard,
 } from "../gemini-cli/gemini.js";
 import { addCardToAnki } from "../gemini-cli/axios.js";
+import { printLoadingDots } from "./utils.js";
 
 const rl = readline.createInterface({ input, output });
 
@@ -21,7 +22,10 @@ const menuOptions = async (option) => {
 	switch (option) {
 		case "1": {
 			let word = await rl.question("Please type the word: \n");
+			const dotInterval = printLoadingDots();
 			let answer = await generateWordCard(word);
+			clearInterval(dotInterval);
+			console.log("");
 			console.log(answer);
 			let regenerate = await rl.question(
 				"Do you want to regenerate the card?\n",
@@ -31,7 +35,7 @@ const menuOptions = async (option) => {
 				console.log(answer);
 				regenerate = await rl.question("Do you want to regenerate the card?\n");
 			}
-			await addCardToAnki(word, answer, ankiDeck, "語彙");
+			await addCardToAnki(word, `<pre>${answer}</pre>`, ankiDeck, "語彙");
 			menu();
 			break;
 		}
@@ -47,6 +51,12 @@ const menuOptions = async (option) => {
 				console.log(answerGrammar);
 				regenerate = await rl.question("Do you want to regenerate the card?\n");
 			}
+			await addCardToAnki(
+				grammar,
+				`<pre>${answerGrammar}</pre>`,
+				ankiDeck,
+				"文法",
+			);
 			menu();
 			break;
 		}
@@ -62,6 +72,12 @@ const menuOptions = async (option) => {
 				console.log(answerSentence);
 				regenerate = await rl.question("Do you want to regenerate the card?\n");
 			}
+			await addCardToAnki(
+				sentence,
+				`<pre>${answerSentence}</pre>`,
+				ankiDeck,
+				"文章",
+			);
 			menu();
 			break;
 		}
