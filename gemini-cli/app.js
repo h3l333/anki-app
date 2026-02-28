@@ -22,7 +22,7 @@ const menuOptions = async (option) => {
 	switch (option) {
 		case "1": {
 			let word = await rl.question("Please type the word: \n");
-			const dotInterval = printLoadingDots();
+			let dotInterval = printLoadingDots();
 			let answer = await generateWordCard(word);
 			clearInterval(dotInterval);
 			console.log("");
@@ -31,7 +31,10 @@ const menuOptions = async (option) => {
 				"Do you want to regenerate the card?\n",
 			);
 			while (regenerate == 1) {
-				let answer = await generateWordCard(word);
+				dotInterval = printLoadingDots();
+				answer = await generateWordCard(word);
+				clearInterval(dotInterval);
+				console.log("");
 				console.log(answer);
 				regenerate = await rl.question("Do you want to regenerate the card?\n");
 			}
@@ -41,13 +44,19 @@ const menuOptions = async (option) => {
 		}
 		case "2": {
 			let grammar = await rl.question("Please type in the grammar point: \n");
+			let dotInterval = printLoadingDots();
 			let answerGrammar = await generateGrammarCard(grammar);
+			clearInterval(dotInterval);
+			console.log("");
 			console.log(answerGrammar);
 			let regenerate = await rl.question(
 				"Do you want to regenerate the card?\n",
 			);
 			while (regenerate == 1) {
-				let answerGrammar = await generateGrammarCard(grammar);
+				dotInterval = printLoadingDots();
+				answerGrammar = await generateGrammarCard(grammar);
+				clearInterval(dotInterval);
+				console.log("");
 				console.log(answerGrammar);
 				regenerate = await rl.question("Do you want to regenerate the card?\n");
 			}
@@ -62,14 +71,20 @@ const menuOptions = async (option) => {
 		}
 		case "3": {
 			let sentence = await rl.question("Please type in the sentence: \n");
+			let dotInterval = printLoadingDots();
 			let answerSentence = await generateSentenceCard(sentence);
+			clearInterval(dotInterval);
+			console.log("");
 			console.log(answerSentence);
 			let regenerate = await rl.question(
 				"Do you want to regenerate the card?\n",
 			);
 			while (regenerate == 1) {
-				let answerSentence = await generateSentenceCard(sentence);
+				dotInterval = printLoadingDots();
+				answerSentence = await generateSentenceCard(sentence);
+				console.log("");
 				console.log(answerSentence);
+				clearInterval(dotInterval);
 				regenerate = await rl.question("Do you want to regenerate the card?\n");
 			}
 			await addCardToAnki(

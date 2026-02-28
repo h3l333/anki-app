@@ -36,7 +36,7 @@ export const generateGrammarCard = async (grammar) => {
 		model: "gemini-2.5-flash",
 		contents: `Reply with nothing but the following template completed for the Japanese grammar point 「${grammar}」, for the purposes of making an Anki card. Do NOT use formatting other than line breaks:
         \n読み方: [reading in kana]
-        \n使い方/接続: [usage]
+        \n使い方/接続: [usage EXPLAINED IN JAPANESE]
         \n表情: [brief snippet in Japanese]
         \n似てる文法点: [similar grammar points]
         \n似ている文法点の違い: [one brief sentence for each similar grammar point]
