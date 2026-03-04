@@ -14,7 +14,9 @@ const rl = readline.createInterface({ input, output });
 const ankiDeck = "日本語::日本語カード";
 
 const menu = async () => {
-	let option = await rl.question("What do you want to do?\n");
+	let option = await rl.question(
+		"What do you want to do?\n1) Generate a word card\n2) Generate a grammar card\n3) Generate a sentence card\n",
+	);
 	await menuOptions(option);
 };
 
@@ -96,6 +98,13 @@ const menuOptions = async (option) => {
 			menu();
 			break;
 		}
+		case "0": {
+			console.log("Bye!\n");
+			rl.close();
+			process.exit();
+		}
+		default:
+			console.log("Not a valid option!\n");
 	}
 };
 
