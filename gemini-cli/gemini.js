@@ -12,22 +12,42 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
+const errorHandler = (response) => {};
+
 export const generateWordCard = async (word) => {
-	const response = await ai.models.generateContent({
-		model: "gemini-2.5-flash",
-		contents: `Reply with nothing but the following template completed for the Japanese word 「${word}」, for the purposes of making an Anki card. Do NOT use formatting other than line breaks:
-        \n読み方: [reading in kana]
-        \n品詞: [part of speech]
-        \n定義: [国語辞典的定義]
-        \n優しい日本語の意味: [explanation in very simple Japanese]
-        \n類義語: [synonyms]
-        \n反義語: [antonyms]
-        \n例文: [list 3 examples cited from online sources such as jisho.org or immersionkit.com; specify the source in parentheses]
-        \n使用場面: [context(s) where the word is used]
-        \n漢字の意味: [very brief description, ONLY IF APPLICABLE. If none apply, just put "漢字なし"]
-        \n日本語の能力試験のレベル: [what JLPT level the word is typically associated with]
-        `,
-	});
+	let response = "";
+	try {
+		response = await ai.models.generateContent({
+			model: "gemini-2.5-flash",
+			contents: `Reply with nothing but the following template completed for the Japanese word 「${word}」, for the purposes of making an Anki card. Do NOT use formatting other than line breaks:
+                \n読み方: [reading in kana]
+                \n品詞: [part of speech]
+                \n定義: [国語辞典的定義]
+                \n優しい日本語の意味: [explanation in very simple Japanese]
+                \n類義語: [synonyms]
+                \n反義語: [antonyms]
+                \n例文: [list 3 examples cited from online sources such as jisho.org or immersionkit.com; specify the source in parentheses]
+                \n使用場面: [context(s) where the word is used]
+                \n漢字の意味: [very brief description, ONLY IF APPLICABLE. If none apply, just put "漢字なし"]
+                \n日本語の能力試験のレベル: [what JLPT level the word is typically associated with]
+                `,
+		});
+	} catch (err) {
+		if (err?.status == 429) {
+			const data = JSON.parse(err.message);
+			const retryInfo = data.error?.details?.find(
+				(d) => d["@type"] === "type.googleapis.com/google.rpc.RetryInfo",
+			);
+			const retryDelay = retryInfo?.retryDelay ?? "unknown";
+
+			console.log(`\nQuota exceeded. Please try again in ${retryDelay}.`);
+			console.log(`Code: ${err.status}`);
+			console.log(`Status: ${data.error?.status}`);
+			return null;
+		}
+		console.error("\n", err);
+		return null;
+	}
 	return response.candidates[0].content.parts[0].text;
 };
 
